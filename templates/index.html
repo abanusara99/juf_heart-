@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <style>
+        body {
+            background-color: #ffc3c3; /* Light red background */
+        }
+        
+        h1 {
+            text-align: center; /* Center align content inside container */
+        }
+        form {
+            width: 50%; /* Adjust the width as needed */
+            margin: 0 auto; /* Center the container horizontally */
+            padding: 20px;
+            background-color: #ffffff; /* White background */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for container */
+        }
+        #prediction-result {
+            margin-top: 20px; /* Add space between form and result */
+            background-color: #ffffff; /* White box background */
+            border: 1px solid #ccc; /* Border for the box */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px; /* Padding inside the box */
+            text-align: center; /* Center align content inside the box */
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>Heart Disease Prediction</h1>
+    <form action="/predict" method="post">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required><br><br>
+
+        <label for="sex">Sex:</label>
+        <select id="sex" name="sex" required>
+            <option value="0">Female</option>
+            <option value="1">Male</option>
+        </select><br><br>
+
+        <label for="cp">Chest Pain Type (cp):</label>
+        <select id="cp" name="cp" required>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select><br><br>
+
+        <label for="trestbps">Resting Blood Pressure (trestbps):</label>
+        <input type="number" id="trestbps" name="trestbps" required><br><br>
+
+        <label for="chol">Cholesterol (chol):</label>
+        <input type="number" id="chol" name="chol" required><br><br>
+
+        <label for="fbs">Fasting Blood Sugar (fbs):</label>
+        <select id="fbs" name="fbs" required>
+            
+            <option value="0">Morethan 120 mg/dl</option>
+            <option value="1">Less than 120 mg/dl</option>
+        </select><br><br>
+
+        <label for="restecg">Resting Electrocardiographic Results (restecg):</label>
+        <select id="restecg" name="restecg" required>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+        </select><br><br>
+
+        <label for="thalach">Maximum Heart Rate Achieved (thalach):</label>
+        <input type="number" id="thalach" name="thalach" required><br><br>
+
+        <label for="exang">Exercise Induced Angina (exang):</label>
+        <select id="exang" name="exang" required>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select><br><br>
+
+        <label for="oldpeak">ST Depression Induced by Exercise Relative to Rest (oldpeak):</label>
+        <input type="number" id="oldpeak" name="oldpeak" required><br><br>
+
+        <label for="slope">Slope of the Peak Exercise ST Segment (slope):</label>
+        <input type="number" id="slope" name="slope" required><br><br>
+
+        <label for="ca">Number of Major Vessels (0-3) Colored by Flourosopy (ca):</label>
+        
+        <select id="ca" name="ca" required>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select><br><br>
+        
+
+        <label for="thal">Thalassemia (thal):</label>
+        <select id="thal" name="thal" required>
+            <option value="0">normal</option>
+            <option value="1">fixed defect</option>
+            <option value="2">reversable defect</option></select>
+
+            <button type="submit">Predict</button>
+        </form>
+        <div id="prediction-result">
+        <p>Heart Prediction<p>
+        <p>{{ prediction_message }}</p></div>
+    
+        <script>
+            document.getElementById("prediction-form").addEventListener("submit", function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var predictionResult = document.getElementById("prediction-result");
+                    var predictionText = data.prediction === 1 ? 'a heart disease' : 'not a heart disease';
+                    predictionResult.innerHTML = `<p style="background-color: white;">Patient is ${predictionText} patient.</p>`;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        </script>
+    </body>
+    </html>
